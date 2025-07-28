@@ -2,25 +2,51 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgres"
-    url      = env("DATABASE_URL")
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+enum DiscordActivityType {
+  Custom
+  Listening
+  Streaming
+  Playing
 }
 
 model Guild {
-    id        String   @id @default(uuid())
-    guildId   String   @unique
-    joinedAt  DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  guildId             String   @unique
+  motivationChannelId String?
+  joinedAt            DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model MotivationQuote {
-    id        String   @id @default(uuid())
-    quote     String
-    author    String
-    addedBy   String
-    createdAt DateTime @default(now())
+  id        String   @id @default(uuid())
+  quote     String
+  author    String
+  addedBy   String
+  createdAt DateTime @default(now())
+}
+
+model SuggestionQuote {
+  id        String   @id @default(uuid())
+  quote     String
+  author    String
+  addedBy   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  guildId   String
+}
+
+model DiscordActivity {
+  id        String              @id @default(uuid())
+  activity  String
+  type      DiscordActivityType @default(Custom)
+  url       String?
+  createdAt DateTime            @default(now())
 }
